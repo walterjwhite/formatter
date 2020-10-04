@@ -1,0 +1,37 @@
+#!/bin/sh
+
+# configure Java executable
+. _APPLICATION_CONFIG_PATH_
+. _LIBRARY_PATH_/_APPLICATION_NAME_/java.sh
+. _LIBRARY_PATH_/git/project.directory.sh
+
+_BRANCH=$(gcb)
+_START=1
+_FILE_PATH=$_PROJECT_PATH/$1
+_FILE_FORMAT_INDEX=_APPLICATION_DATA_PATH_/$_PROJECT/$_BRANCH/$_FILE_PATH
+
+if [ -e $_FILE_FORMAT_INDEX ]
+then
+    _START=$(head -1 $_FILE_FORMAT_INDEX)
+    _END=$(echo "$_START + $_LINES" | bc)
+
+    _LINES=$(wc -l $1 | awk '{print$1}')
+    if [ "$_START" -gt "$_LINES" ]
+    then
+        exitSuccess "$1 - Already formatted"
+    fi
+else
+    _END=$_LINES
+
+    mkdir -p $(dirname $_FILE_FORMAT_INDEX)
+fi
+
+_OPTIONS="-lines $_START:$_END"
+
+# update index
+_NEXT=$(echo "$_END + 1" | bc)
+
+echo "$1 - will start @ $_NEXT next time"
+echo $_NEXT > $_FILE_FORMAT_INDEX
+
+$_JAVA_FORMAT_CLI $_OPTIONS $1

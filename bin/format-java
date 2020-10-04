@@ -1,0 +1,34 @@
+#!/bin/sh
+
+# formats Java
+# can format specific files (one-at-a-time, limit to # of lines / time)
+. _APPLICATION_CONFIG_PATH_
+
+for _ARG in $@
+do
+    case $_ARG in
+        # lines
+        -l=*)
+            _LINES="${_ARG#*=}"
+            shift
+            ;;
+        -s=*)
+            _SINCE="${_ARG#*=}"
+            shift
+            ;;
+    esac
+done
+
+if [ -z "$_SINCE" ]
+then
+    find . -type f | grep \\.java$\
+        | xargs -L $_PARALLEL -I _FILE_ format-java-file _FILE_
+else
+    # Java files that have not changed since
+    gucf -s=$_SINCE 2>/dev/null  | grep \\.java$\
+        | xargs -L $_PARALLEL -I _FILE_ format-java-file _FILE_
+    
+    # Java files that have changed since
+    gcf -s=$_SINCE 2>/dev/null  | grep \\.java$\
+        | xargs -L $_PARALLEL -I _FILE_ _LINES=$_LINES format-java-file-lines _FILE_
+fi

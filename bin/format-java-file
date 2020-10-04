@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# configure Java executable
+. _APPLICATION_CONFIG_PATH_
+. _LIBRARY_PATH_/_APPLICATION_NAME_/java.sh
+
+$_JAVA_FORMAT_CLI $1
