@@ -1,0 +1,35 @@
+#!/bin/bash
+
+source ./.libraries/common
+
+_GITHUB_MODULE_PATH=github.com/walterjwhite/go-application
+_PWD=$(pwd)
+
+_do_test() {
+	cd $_target
+	
+	local _HAS_GO_FILES=$(find . -maxdepth 1 -type f  | grep \\.go$ | wc -l)
+	if [ "$_HAS_GO_FILES" -gt "0" ]
+	then
+		echo -e "running benchmarks: $_target"
+	
+		go test -test.bench=".*"
+	fi
+	
+	cd $_PWD
+}
+
+_test() {
+	for _target in $@
+	do
+		_do_test
+	done
+}
+
+if [ "$#" -eq "0" ]
+then
+	_test $(find go-application -maxdepth 4 -type d | sort -u)
+else
+	_test $@
+fi
+

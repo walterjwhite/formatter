@@ -1,0 +1,5 @@
+#!/bin/sh
+
+_GODOC_PORT=9999
+
+godoc -http=localhost:$_GODOC_PORT

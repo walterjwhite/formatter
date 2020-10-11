@@ -1,0 +1,5 @@
+#!/bin/sh
+
+_FILE_TYPE=go
+
+wc -l $(find . -type f | grep \\.$_FILE_TYPE$)

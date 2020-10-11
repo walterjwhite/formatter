@@ -1,0 +1,13 @@
+#!/bin/sh
+
+_MODULE=1
+
+_doBuild() {
+	go build -a -race $_BUILD_OPTIONS
+}
+
+_build_files() {
+	dirname $(grep "package" $(find . -type f | grep \\.go$) | grep -v "^package main$" | sed -e "s/\:.*$//") | sort -u
+}
+
+. _LIBRARY_PATH_/_APPLICATION_NAME_/go.common.sh
