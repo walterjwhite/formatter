@@ -1,0 +1,35 @@
+#!/bin/sh
+
+# sub-commands (init, create, prepare, archive, restore)
+if [ "$#" -lt "1" ]
+then
+    exitWithError "sub-command (init, create, prepare, archive, restore) is required." 1
+fi
+
+_SUB_COMMAND=$1
+shift
+
+_WORKSPACE_BASE_PATH=~/workspaces
+
+_get_workspace_directory() {
+	_in=$(pwd | grep -c $_WORKSPACE_BASE_PATH)
+	if [ "$_in" -eq "0" ]
+	then
+		exitWithError "Outside $_WORKSPACE_BASE_PATH directory, unable to find workspace directory" 1
+	fi
+
+	if [ -e .git ]
+	then
+		_WORKSPACE_PATH=$(pwd)
+		_WORKSPACE=$(basename $_WORKSPACE_PATH)
+
+		return
+	fi
+
+	cd ..
+	_get_workspace_directory
+}
+
+_get_workspace_directory
+
+. _LIBRARY_PATH_/_APPLICATION_NAME_/workspace/$_SUB_COMMAND.sh
