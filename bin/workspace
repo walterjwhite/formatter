@@ -18,7 +18,7 @@ _get_workspace_directory() {
 		exitWithError "Outside $_WORKSPACE_BASE_PATH directory, unable to find workspace directory" 1
 	fi
 
-	if [ -e .git ]
+	if [ -d .git ]
 	then
 		_WORKSPACE_PATH=$(pwd)
 		_WORKSPACE=$(basename $_WORKSPACE_PATH)
@@ -29,7 +29,5 @@ _get_workspace_directory() {
 	cd ..
 	_get_workspace_directory
 }
-
-_get_workspace_directory
 
 . _LIBRARY_PATH_/_APPLICATION_NAME_/workspace/$_SUB_COMMAND.sh

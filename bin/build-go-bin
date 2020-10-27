@@ -1,18 +1,17 @@
 #!/bin/sh
 
+. _APPLICATION_CONFIG_PATH_
+
 _BUILD_DATE=$(date +"%Y/%m/%d-%H:%M:%S")
 _VERSION=$(git rev-parse HEAD)
 _GO_VERSION=$(go version | awk {'print$3'})
 _OS_ARCHITECTURE=$(go version | awk {'print$4'})
 
-_PACKAGE_PREFIX="github.com/walterjwhite/go-application/libraries/application"
+_APP_VERSION_FLAG="${_APPLICATION_PACKAGE_PREFIX}.ApplicationVersion=$_VERSION"
+_BUILD_DATE_FLAG="${_APPLICATION_PACKAGE_PREFIX}.BuildDate=$_BUILD_DATE"
+_GO_VERSION_FLAG="${_APPLICATION_PACKAGE_PREFIX}.GoVersion=$_GO_VERSION"
+_OS_ARCHITECTURE_FLAG="${_APPLICATION_PACKAGE_PREFIX}.OSArchitecture=$_OS_ARCHITECTURE"
 
-_APP_VERSION_FLAG="${_PACKAGE_PREFIX}.ApplicationVersion=$_VERSION"
-_BUILD_DATE_FLAG="${_PACKAGE_PREFIX}.BuildDate=$_BUILD_DATE"
-_GO_VERSION_FLAG="${_PACKAGE_PREFIX}.GoVersion=$_GO_VERSION"
-_OS_ARCHITECTURE_FLAG="${_PACKAGE_PREFIX}.OSArchitecture=$_OS_ARCHITECTURE"
-
-#_BUILD_OPTIONS="-ldflags ' -X $_APPLICATION_VERSION_FLAG -X $_BUILD_DATE_FLAG -X $_GO_VERSION_FLAG -X $_OS_ARCHITECTURE_FLAG'"
 _BUILD_OPTIONS="-X $_APP_VERSION_FLAG -X $_BUILD_DATE_FLAG -X $_GO_VERSION_FLAG -X $_OS_ARCHITECTURE_FLAG"
 
 if [ -n "$_DEBUG" ]
@@ -25,12 +24,13 @@ then
 fi
 
 _doBuild() {
-	#go build -a -race -ldflags "$_BUILD_OPTIONS"
 	go install -a -race -ldflags "$_BUILD_OPTIONS"
+
+	# additional race detection
+	chronos -file $(grep "func main()" $(find . -type f | grep \\.go$) -l)
 }
 
 _build_files() {
-	#grep -l "package main" $(find . -type f | grep \\.go$) | sort -u
 	dirname $(grep -l "package main" $(find . -type f | grep \\.go$) )\
 		| sort -u
 }

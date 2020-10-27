@@ -16,10 +16,18 @@ shift
 _JENKINS_JOB_NAME=$1
 shift
 
-. $_WORKSPACE_PATH/jenkins/$_JENKINS_JOB_NAME
+_get_workspace_directory
+_JENKINS_JOB_CONFIGURATION_FILE=$_WORKSPACE_PATH/jenkins/$_JENKINS_JOB_NAME
+if [ ! -e $_JENKINS_JOB_CONFIGURATION_FILE ]
+then
+    exitWithError "Jenkins job configuration file ($_JENKINS_JOB_CONFIGURATION_FILE) does not exist" 1
+fi
 
-jenkins $_JENKINS_SUB_COMMAND\
+. $_JENKINS_JOB_CONFIGURATION_FILE
+
+jenkins\
     -url $_JENKINS_URL\
     -username ${_JENKINS_SECRET_KEY}/username\
     -password ${_JENKINS_SECRET_KEY}/password\
-    -j $_JENKINS_JOB_NAME
+    -j $_JENKINS_JOB_NAME\
+    $_JENKINS_SUB_COMMAND
