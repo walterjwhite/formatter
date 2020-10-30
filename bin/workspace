@@ -1,6 +1,7 @@
 #!/bin/sh
 
 # sub-commands (init, create, prepare, archive, restore)
+# @reference: https://dev.to/robusgauli/how-do-i-work-on-multiple-projects-simultaneously-without-losing-my-mind-5h3o
 if [ "$#" -lt "1" ]
 then
     exitWithError "sub-command (init, create, prepare, archive, restore) is required." 1

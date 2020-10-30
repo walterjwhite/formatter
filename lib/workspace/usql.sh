@@ -2,6 +2,8 @@
 
 # wrapper around usql CLI
 # example: workspace usql -i=peanuts -e=dev -u=me -f=varieties.count
+_get_workspace_directory
+
 _OPTIONS=""
 for _ARG in $@
 do
@@ -16,7 +18,7 @@ do
             _USER="${_ARG#*=}"
             ;;
         -f=*|--file=*)
-            _FILE=.usql/queries/"${_ARG#*=}".sql
+            _FILE=$_WORKSPACE_PATH/.usql/queries/"${_ARG#*=}".sql
             _OPTIONS="$_OPTIONS --file=$_FILE"
             ;;
         -C)
@@ -38,7 +40,7 @@ _require "$_FILE" "File" 3
 #_require "$_USER" "User" 3
 
 _DATESTAMP=$(date +%Y.%m.%d.%H.%M.%S)
-_OUTPUT_FILE=.data/$_DATABASE_ID/$_ENVIRONMENT/$_USER/$(basename $_FILE | sed -e "s/\.sql//").${_DATESTAMP}.csv
+_OUTPUT_FILE=$_WORKSPACE_PATH/.data/$_DATABASE_ID/$_ENVIRONMENT/$_USER/$(basename $_FILE | sed -e "s/\.sql//").${_DATESTAMP}.csv
 
 mkdir -p $(dirname $_OUTPUT_FILE)
 
@@ -49,7 +51,7 @@ mkdir -p $(dirname $_OUTPUT_FILE)
 # @ISSUE: https://github.com/xo/usql/issues/96
 
 
-_DSN_FILE=.usql/connections/$_DATABASE_ID/$_ENVIRONMENT
+_DSN_FILE=$_WORKSPACE_PATH/.usql/connections/$_DATABASE_ID/$_ENVIRONMENT
 if [ ! -e $_DSN_FILE ]
 then
     exitWithError "DSN: $_DSN_FILE does NOT exist" 4
