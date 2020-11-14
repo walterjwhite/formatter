@@ -18,6 +18,14 @@ _fix() {
 	go fix
 }
 
+_test() {
+	local _has_tests=$(find . -type f -maxdepth 1 | grep _test.go | wc -l)
+	if [ "$_has_tests" -gt "0" ]
+	then
+		go test
+	fi
+}
+
 _cleanup() {
 	rm -rf /tmp/{go-build*,cgo*,cc*,golangci*}
 }

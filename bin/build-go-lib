@@ -5,6 +5,8 @@
 _MODULE=1
 
 _doBuild() {
+	_test
+	
 	go build -a -race $_BUILD_OPTIONS
 }
 
