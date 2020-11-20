@@ -1,0 +1,2 @@
+_METHOD=GET
+_URL=httpbin.org/get
