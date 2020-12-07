@@ -1,7 +1,5 @@
 #!/bin/sh
 
-. _APPLICATION_CONFIG_PATH_
-
 _BUILD_DATE=$(date +"%Y/%m/%d-%H:%M:%S")
 _VERSION=$(git rev-parse HEAD)
 _GO_VERSION=$(go version | awk {'print$3'})
@@ -26,8 +24,9 @@ fi
 _doBuild() {
 	go install -a -race -ldflags "$_BUILD_OPTIONS"
 
+	# TODO: determine how to use this
 	# additional race detection
-	chronos -file $(grep "func main()" $(find . -type f | grep \\.go$) -l)
+	#chronos -file $(grep "func main()" $(find . -type f | grep \\.go$) -l)
 }
 
 _build_files() {

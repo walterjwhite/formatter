@@ -1,7 +1,5 @@
 #!/bin/sh
 
-. _APPLICATION_CONFIG_PATH_
-
 _MODULE=1
 
 _doBuild() {
