@@ -11,7 +11,7 @@ _do_test() {
 	local _HAS_GO_FILES=$(find . -maxdepth 1 -type f  | grep \\.go$ | wc -l)
 	if [ "$_HAS_GO_FILES" -gt "0" ]
 	then
-		echo -e "running benchmarks: $_target"
+		info "running benchmarks: $_target"
 	
 		go test -test.bench=".*"
 	fi

@@ -2,9 +2,8 @@
 
 # creates a new branch within a workspace
 
-if [ "$#" -lt "2" ]
-then
-    exitWithError "source workspace branch and destination branch are required" 1
+if [ "$#" -lt "2" ]; then
+	exitWithError "source workspace branch and destination branch are required" 1
 fi
 
 _WORKSPACE_SOURCE_BRANCH=$1

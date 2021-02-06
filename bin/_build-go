@@ -1,0 +1,13 @@
+#!/bin/sh
+
+. _APPLICATION_CONFIG_PATH_
+
+. _LIBRARY_PATH_/_APPLICATION_NAME_/go/common.sh
+
+if [ "$#" -eq "0" ]; then
+	_build_all $(_build_files)
+else
+	_build_all $@
+fi
+
+_cleanup

@@ -1,11 +1,10 @@
 #!/bin/sh
 
 # submodules have .git as a file and not a dir
-for _GIT_SUBMODULE in $(find $_WORKSPACE_PATH/git -type f | \\.git$ | sed -e "s/\.git$//")
-do
-    cd $_GIT_SUBMODULE
+for _GIT_SUBMODULE in $(find $_WORKSPACE_PATH/git -type f | \\.git$ | sed -e "s/\.git$//"); do
+	cd $_GIT_SUBMODULE
 
-    git push
+	git push
 
-    cd $_WORKSPACE_PATH
+	cd $_WORKSPACE_PATH
 done

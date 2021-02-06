@@ -2,9 +2,8 @@
 
 # sub-commands (init, create, prepare, archive, restore)
 # @reference: https://dev.to/robusgauli/how-do-i-work-on-multiple-projects-simultaneously-without-losing-my-mind-5h3o
-if [ "$#" -lt "1" ]
-then
-    exitWithError "sub-command (init, create, prepare, archive, restore) is required." 1
+if [ "$#" -lt "1" ]; then
+	exitWithError "sub-command (init, create, prepare, archive, restore) is required." 1
 fi
 
 _SUB_COMMAND=$1
@@ -14,13 +13,11 @@ _WORKSPACE_BASE_PATH=~/workspaces
 
 _get_workspace_directory() {
 	_in=$(pwd | grep -c $_WORKSPACE_BASE_PATH)
-	if [ "$_in" -eq "0" ]
-	then
+	if [ "$_in" -eq "0" ]; then
 		exitWithError "Outside $_WORKSPACE_BASE_PATH directory, unable to find workspace directory" 1
 	fi
 
-	if [ -d .git ]
-	then
+	if [ -d .git ]; then
 		_WORKSPACE_PATH=$(pwd)
 		_WORKSPACE=$(basename $_WORKSPACE_PATH)
 

@@ -1,5 +1,10 @@
 #!/bin/sh
 
-_GODOC_PORT=9999
+. _APPLICATION_CONFIG_PATH_
 
+if [ -z $_GODOC_PORT ]; then
+	exitWithError "_GODOC_PORT is unset" 1
+fi
+
+info "Starting godocs @ $_GODOC_PORT"
 godoc -http=localhost:$_GODOC_PORT

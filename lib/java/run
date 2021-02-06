@@ -1,0 +1,71 @@
+#!/bin/sh
+
+. /usr/share/java-development-lib.sh
+
+_STOP="1"
+
+_validate() {
+	if [ ! -e target ]
+	then
+		_exit "Project executable does not exist!"
+	fi
+
+	if [ ! -e target/lib ]
+	then
+		_EXECUTABLE_JAR=$(find target -maxdepth 1 | grep -P \.jar$ | head -1)
+	else
+		_EXECUTABLE_JAR=$(find target -maxdepth 1 | grep -Pv shaded.jar$ | grep -P \\.jar$)
+	fi
+
+	if [ -z "$_EXECUTABLE_JAR" ]
+	then
+		_exit "Project executable does not exist!" 2
+	fi
+}
+
+_read_cli() {
+	_OPTIONS=""
+	for value in "$@"
+	do
+		case $value in
+			--jvm=*)
+				_JVM="${value#*=}"
+				;;
+			--no-stop)
+				_STOP=0
+				;;
+			# support java properties
+			# convert property name
+			*)
+				_OPTIONS="$_OPTIONS $value"
+				;;
+		esac
+	done
+}
+
+run() {
+	_validate
+	_read_cli $@
+
+	if [ "$_STOP" -eq "1" ]
+	then
+		stop
+	fi
+
+	_run
+	_log_pids
+}
+
+_run() {
+	_LOG_FILE=target/log.$(date +%Y%m%d%H%M%S)
+	java $_JVM -jar $_EXECUTABLE_JAR $_OPTIONS >& | tee $_LOG_FILE &
+
+	echo -e "writing logs to $_LOG_FILE"
+}
+
+_log_pids() {
+	jobs -p >> $_PID_FILE
+	echo -e "wrote PID to $_PID_FILE"
+}
+
+run $@

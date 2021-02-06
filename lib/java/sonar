@@ -1,0 +1,18 @@
+#!/bin/sh
+
+_PATH=.
+if [ "$#" -ge "1" ]; then
+	_PATH=$1
+	shift
+fi
+
+_PWD=$(pwd)
+for p in $(find $_PATH -type f | grep \\.git$ | sed -e "s/\.git$//"); do
+	cd $p
+
+	echo -e "Running sonar: $p"
+	#mvn sonar:sonar -Dsonar.host.url=http://localhost:9000 -Dsonar.login=$(decrypt-secret SONAR_KEY)
+	mvn sonar:sonar -Dsonar.host.url=http://localhost:9000 -Dsonar.login=b2c2208a69486800438a814ca19fddf51a6c8708 -Dorg.slf4j.simpleLogger.defaultLogLevel=warn
+
+	cd $_PWD
+done

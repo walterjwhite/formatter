@@ -1,0 +1,16 @@
+#!/bin/sh
+
+. /usr/share/java-development-lib.sh
+
+stop() {
+	if [ -e $_PID_FILE ]; then
+		echo -e "stopping $_PROJECT_NAME"
+
+		kill -9 $(cat $_PID_FILE) 2>/dev/null
+		rm -f $_PID_FILE
+	else
+		echo -e "unable to stop $_PROJECT_NAME, no PID found"
+	fi
+}
+
+stop

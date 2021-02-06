@@ -1,0 +1,47 @@
+#!/bin/sh
+
+_SUSPEND="y"
+#_STOP="1"
+
+_determine_debug_port() {
+	_DEBUG_PORT=$(netstat -patune 2>/dev/null | grep java | awk {'print$4'} |
+		grep -Po ":500[0-9]{1}" | sed -e "s/^\://" | sort -u | tail -1)
+
+	if [ -z "$_DEBUG_PORT" ]; then
+		_DEBUG_PORT=5005
+	else
+		((_DEBUG_PORT++))
+	fi
+
+	echo -e $_DEBUG_PORT
+}
+
+_read_cli() {
+	_OPTIONS=""
+	for value in "$@"; do
+		case $value in
+		--no-suspend)
+			_SUSPEND=n
+			;;
+		#--no-stop)
+		#	_STOP=0
+		#	;;
+		# support java properties
+		# convert property name
+		*)
+			_OPTIONS="$_OPTIONS $value"
+			;;
+		esac
+	done
+}
+
+_read_cli $@
+
+#if [ "$_STOP" -eq "1" ]
+#then
+#	stop
+#fi
+
+_determine_debug_port
+
+run --jvm="-agentlib:jdwp=transport=dt_socket,server=y,suspend=$_SUSPEND,address=$_DEBUG_PORT" $_OPTIONS

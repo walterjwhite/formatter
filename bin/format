@@ -1,0 +1,5 @@
+#!/bin/sh
+
+for _FORMATTER in $(find _LIBRARY_PATH_/_APPLICATION_NAME_/format -maxdepth 1 -type f); do
+	. $_FORMATTER
+done

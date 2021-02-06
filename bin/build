@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# @TODO: pass args
+
+if [ -e pom.xml ]; then
+	_build-maven
+elif [ $(find . -type f | grep \\.go$ | wc -l) -gt 0 ]; then
+	_build-go
+else
+	exitWithError "Unknown project structure" 1
+fi

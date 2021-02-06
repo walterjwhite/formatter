@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# -n - do not clear the repository
+# -t - do not skip tests
+build -n -t $@

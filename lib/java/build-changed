@@ -1,0 +1,16 @@
+#!/bin/sh
+
+if [ ! -e .gitmodules ]; then
+	echo -e "Not in root of project, exitting"
+	exit 1
+fi
+
+local _PWD=$(pwd)
+
+for p in $(git status -s | awk {'print$2'}); do
+	cd $p
+
+	build
+
+	cd $_PWD
+done

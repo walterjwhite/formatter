@@ -1,0 +1,16 @@
+#!/bin/sh
+
+. /usr/share/java-development-lib.sh
+
+_IS_RUNNING=0
+if [ -e $_PID_FILE ]; then
+	_PID_FILTER=$(cat $_PID_FILE | grep -v "^$" | tr '\n' '|' | sed -e "s/|$//")
+	_IS_RUNNING=$(ps aux | awk {'print$2'} | grep -P "(($_PID_FILTER))" | wc -l)
+fi
+
+rm -f $_PID_FILE
+if [ "$_IS_RUNNING" -gt "0" ]; then
+	echo -e "$_PROJECT_NAME is running"
+else
+	echo -e "$_PROJECT_NAME is NOT running"
+fi

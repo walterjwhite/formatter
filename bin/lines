@@ -1,5 +1,18 @@
 #!/bin/sh
 
-_FILE_TYPE=go
+. _APPLICATION_CONFIG_PATH_
 
-wc -l $(find . -type f | grep \\.$_FILE_TYPE$)
+_FILE_TYPES=$(find . -type f | grep -v \\.git | sed -e "s/^.*\.//" |
+	$_GNU_GREP -P "^[\w]{2,4}$" |
+	sort -u | tr '\n' ' ')
+
+for _FILE_TYPE in $_FILE_TYPES; do
+	if [ $(find . -type f | grep \\.$_FILE_TYPE$ | wc -l) -gt 1 ]; then
+		wc -l $(find . -type f | grep \\.$_FILE_TYPE$) |
+			grep total | sed -e "s/total/total ($_FILE_TYPE)/"
+	else
+		wc -l $(find . -type f | grep \\.$_FILE_TYPE$) |
+			awk {'print$1'} | sed -e "s/$/ total ($_FILE_TYPE)/" |
+			sed -e "s/^/\t/"
+	fi
+done
