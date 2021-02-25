@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# formats Powershell
+. _APPLICATION_CONFIG_PATH_
+
