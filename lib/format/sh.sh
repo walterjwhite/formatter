@@ -8,7 +8,7 @@ _is_script() {
 	return $(head -1 $_FILE | grep -c "#\!/bin/sh")
 }
 
-for _FILE in $(find . -type f | grep -v \\.git); do
+for _FILE in $(find . -type f | grep -v \\.git/); do
 	_is_script
 	if [ $? -gt 0 ]; then
 		if [ $_ALERTED -eq 0 ]; then
